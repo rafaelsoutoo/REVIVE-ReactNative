@@ -1,12 +1,9 @@
 import { createBottomTabNavigator, BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
-
-
-
-
 import { Home } from '@screens/Home';
 import { Register } from '@screens/Register';
 import { Meta } from '@screens/Meta';
+
 
 type AppRoutes = {
     home: undefined;
@@ -20,9 +17,6 @@ const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
 export function AppRoutes() {
 
-
-
-
     return (
         <Navigator screenOptions={{
             headerShown: false,
@@ -33,9 +27,13 @@ export function AppRoutes() {
                 paddingTop: 10,
                 borderTopColor: "#2F2841",
                 height: 60,
+                
             },
+            
 
         }}>
+
+            
             <Screen
                 name='home'
                 component={Home}
@@ -66,6 +64,7 @@ export function AppRoutes() {
                 }}
             />
 
+           
         </Navigator>
     );
 }
