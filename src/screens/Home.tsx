@@ -1,16 +1,15 @@
-import { Box, VStack, Image, Center, Text, HStack, Heading } from "native-base";
+import { Box, VStack, Image, Center, Text, HStack, Heading, ScrollView } from "native-base";
 import MentalPng from '@assets/Mental.png';
 
 import IconHomePng from '@assets/Group.png'
 
 export function Home() {
     return (
-        <VStack bg="#201B2C" flex={1} >
-
-            <Center >
-                <Box bg="#2F2841" h={460} w={340} mt={16} rounded={20} alignItems='center' >
+        <ScrollView bg="#201B2C" flex={1} py={10} showsVerticalScrollIndicator={false}>
+            <Center p={6} >
+                <Box bg="#2F2841" h="auto" w="100%" rounded={20} alignItems='center' p={6}>
                     <VStack alignItems="center">
-                        <Heading color="#00FF89" mt={6} fontSize={20}>
+                        <Heading color="#00FF89" mt={2} fontSize={20}>
                             Seu Histórico resumido ficará aqui
                         </Heading>
                         <Image
@@ -19,7 +18,7 @@ export function Home() {
                             mt={5}
                             mb={5}
                         />
-                        <Box bg="#00FF89" w={290} h={160} rounded="10" p={2}>
+                        <Box bg="#00FF89" rounded="10" py={3} px={5} w="100%">
                             <Heading fontSize={16}>
                                 Comprometid@ a me livrar de:
                             </Heading>
@@ -28,43 +27,36 @@ export function Home() {
                                 - Chocolate {'\n'}
                                 - Álcool {'\n'}
                                 - Pornografia {'\n'}
+
                             </Text>
                         </Box>
-
-                        <HStack mt={5}>
-                            <Box bg="#00FF89" w={140} h={120} rounded="10" mr={4}>
-                                <Center>
-                                    <Text p={1}>
-                                        Tempo desde a
-                                        útima recaída:
-                                    </Text>
-                                    <Heading p={2} fontSize={14}>
-                                        7d 10h 10m 38s
-                                    </Heading>
-                                </Center>
+                        <HStack mt={5} space={3} >
+                            <Box bg="#00FF89" rounded="10" py={7} width='50%' >
+                                <Text textAlign="center">
+                                    Útima recaída:
+                                </Text>
+                                <Heading fontSize={14} textAlign="center">
+                                    7d 10h 10m 38s
+                                </Heading>
                             </Box>
-                            <Box bg="#00FF89" w={140} h={120} rounded="10" >
-                                <Center>
-                                    <Text p={2} mt={2}>
-                                        Total economizado:
-                                    </Text>
-                                    <Heading p={4} fontSize={14} >
-                                        R$ 405,77
-                                    </Heading>
-                                </Center>
+                            <Box bg="#00FF89" rounded="10" py={7} width='50%' >
+                                <Text textAlign="center">
+                                    Total economizado:
+                                </Text>
+                                <Heading fontSize={14} textAlign="center">
+                                    R$ 405,77
+                                </Heading>
                             </Box>
-
                         </HStack>
                     </VStack>
                 </Box>
-            </Center>
-            <Center>
                 <Image
                     source={MentalPng}
                     alt="Imagem inicial"
+                    mb={5}
                 />
             </Center>
 
-        </VStack>
+        </ScrollView>
     );
 }

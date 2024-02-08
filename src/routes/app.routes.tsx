@@ -1,14 +1,15 @@
 import { createBottomTabNavigator, BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons, AntDesign, Entypo, Ionicons  } from '@expo/vector-icons';
 import { Home } from '@screens/Home';
 import { Register } from '@screens/Register';
 import { Meta } from '@screens/Meta';
-
+import { Profile } from '@screens/Profile';
 
 type AppRoutes = {
     home: undefined;
     meta: undefined;
     register: undefined;
+    profile: undefined;
 }
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -60,6 +61,15 @@ export function AppRoutes() {
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <AntDesign name="pushpin" color={focused ? "#00FF89" : "black"} size={35} />
+                    )
+                }}
+            />
+            <Screen
+                name='profile'
+                component={Profile}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <Ionicons  name="person-circle" color={focused ? "#00FF89" : "black"} size={35} />
                     )
                 }}
             />
