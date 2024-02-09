@@ -22,9 +22,9 @@ export function SignIn() {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
             <VStack bg="#201B2C" flex={1}>
-                <VStack alignItems="center" mt={50} >
+                <VStack alignItems="center" mt={50} px={8} mb={15}>
                     <Heading color="#00FF89" justifyContent="center" fontSize={30} mb={6}>REVIVE</Heading>
-                    <Box h={450} w={320} bg="#2F2841" rounded={32} alignItems="center" >
+                    <Box maxH={450} w="full" bg="#2F2841" rounded={32} alignItems="center" >
                         <Heading mt={5} color="#00FF89" mb={12}>Login</Heading>
                         <Input
                             placeholder="E-mail"
@@ -56,17 +56,17 @@ export function SignIn() {
                             title="Entrar"
                             variant="solid"
                             mt={5}
+                            mb={5}
                         />
 
                     </Box>
-                </VStack>
-
-                <View flex={1} justifyContent="flex-end" alignItems="center">
                     <Image
                         source={BackgroundImg}
                         alt="Imagem inicial"
                     />
-                </View>
+                </VStack>
+
+
             </VStack>
         </ScrollView>
     );
