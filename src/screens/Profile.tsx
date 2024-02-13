@@ -65,7 +65,7 @@ export function Profile() {
 
     return (
         <ScrollView backgroundColor="#201B2C" contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} py={10}>
-            <Center p={5} mb={10}>
+            <Center p={5} mb={20}>
                 <Box bg="#201B2C" h="full" w="100%" rounded={20} borderColor="#201B2C" borderWidth={0}>
                     <VStack bg="#2F2841" w="100%" h="100%" rounded={20} mt={0} py={3}>
                         <Center mt={3} px={10}>

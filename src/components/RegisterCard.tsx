@@ -5,13 +5,13 @@ import { Entypo } from '@expo/vector-icons'
 
 
 type Props = IImageProps & {
-    title: string;
+    name: string;
 }
 
-export function RegisterCard({ title, ...rest }: Props) {
+export function RegisterCard({ name, ...rest }: Props) {
     return (
         <TouchableOpacity >
-            <HStack bg="#00FF89" alignItems="center" p={2} pr={4} rounded="15" mb={3} w="100%" h={50} >
+            <HStack bg="#00FF89" alignItems="center" p={2} pr={4} rounded="15" mb={3} width="280" h={50} >
                 <Image
                     alt="Imagem Logo"
                     mr={4}
@@ -21,7 +21,7 @@ export function RegisterCard({ title, ...rest }: Props) {
 
                 <VStack flex={1}>
                     <Heading fontSize="lg" color="black">
-                        {title}
+                        {name}
                     </Heading>
 
                 </VStack>
