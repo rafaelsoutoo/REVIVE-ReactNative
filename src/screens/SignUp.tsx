@@ -75,6 +75,7 @@ export function SignUp() {
                                     onChangeText={onChange}
                                     value={value}
                                     errorMessage={errors.name?.message}
+                                    mx={5}
                                 />
                             )}
                         />
@@ -95,6 +96,7 @@ export function SignUp() {
                                     onChangeText={onChange}
                                     value={value}
                                     errorMessage={errors.email?.message}
+                                    mx={5}
                                 />
                             )}
                         />
@@ -114,13 +116,14 @@ export function SignUp() {
                                     onChangeText={onChange}
                                     value={value}
                                     errorMessage={errors.password?.message}
+                                    mx={5}
                                 />
                             )}
                         />
 
                         <Controller
                             control={control}
-                            name="name"
+                            name="password_confirm"
 
                             render={({ field: { onChange, value } }) => (
 
@@ -135,6 +138,7 @@ export function SignUp() {
                                     onSubmitEditing={handleSubmit(handleSignUp)}
                                     returnKeyType='send'
                                     errorMessage={errors.password_confirm?.message}
+                                    mx={5}
                                 />
                             )}
                         />

@@ -1,13 +1,10 @@
-import { Box, Center, ScrollView, VStack, Heading, useToast, Skeleton, Text } from "native-base";
+import { Center, ScrollView, VStack, Heading, useToast, Skeleton, Text } from "native-base";
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-
 import { useState } from "react";
 import { TouchableOpacity } from 'react-native'
-
 import { Button } from "@components/Button";
 import { UserPhoto } from '@components/UserPhoto';
-
 import { Input } from "@components/Input";
 
 
@@ -66,95 +63,98 @@ export function Profile() {
     return (
         <ScrollView backgroundColor="#201B2C" contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} py={10}>
             <Center p={5} mb={20}>
-                <Box bg="#201B2C" h="full" w="100%" rounded={20} borderColor="#201B2C" borderWidth={0}>
-                    <VStack bg="#2F2841" w="100%" h="100%" rounded={20} mt={0} py={3}>
-                        <Center mt={3} px={10}>
-                            <Heading color='#00FF89' mb={6} fontSize={28}>
-                                Perfil
-                            </Heading>
-                            {
-                                photoIsLoading ?
-                                    <Skeleton
-                                        w={PHOTO_SIZE}
-                                        h={PHOTO_SIZE}
-                                        rounded="full"
-                                        startColor="gray.500"
-                                        endColor="gray.400"
-                                    />
-                                    :
-                                    <UserPhoto
-                                        source={{ uri: userPhoto }}
-                                        alt="Foto do usuário"
-                                        size={PHOTO_SIZE}
-                                    />
-                            }
+                <VStack bg="#2F2841" rounded={20} h="full" w="100%" p={5}>
+                    <Center mt={3}>
+                        <Heading color='#00FF89' mb={6} fontSize={28}>
+                            Perfil
+                        </Heading>
+                        {
+                            photoIsLoading ?
+                                <Skeleton
+                                    w={PHOTO_SIZE}
+                                    h={PHOTO_SIZE}
+                                    rounded="full"
+                                    startColor="gray.500"
+                                    endColor="gray.400"
+                                />
+                                :
+                                <UserPhoto
+                                    source={{ uri: userPhoto }}
+                                    alt="Foto do usuário"
+                                    size={PHOTO_SIZE}
+                                />
+                        }
 
-                            <TouchableOpacity onPress={handleUserPhotoSelect}>
-                                <Text color="gray.400" fontWeight="bold" fontSize="md" mt={3} mb={6}>
-                                    Alterar Foto
-                                </Text>
-                            </TouchableOpacity>
+                        <TouchableOpacity onPress={handleUserPhotoSelect}>
+                            <Text color="gray.400" fontWeight="bold" fontSize="md" mt={3} mb={6}>
+                                Alterar Foto
+                            </Text>
+                        </TouchableOpacity>
 
 
-                            <Input
-                                h={10}
-                                w="100%"
-                                rounded={10}
-                                placeholder="Nome"
-                                fontSize={15}
-                                p={2}
-                            />
-                            <Input
-                                h={10}
-                                w="100%"
-                                rounded={10}
-                                placeholder="E-mail"
-                                isDisabled
-                                fontSize={15}
-                                p={2}
-                            />
+                        <Input
+                            h={10}
+                            w="100%"
+                            rounded={10}
+                            placeholder="Nome"
+                            fontSize={15}
+                            p={2}
+                            
 
-                            <Heading color="gray.400" fontSize="md" mb={2} alignSelf="flex-start" mt={10}>
-                                Alterar senha
-                            </Heading>
 
-                            <Input
-                                h={10}
-                                w="100%"
-                                rounded={10}
-                                placeholder="Senha antiga"
-                                secureTextEntry
-                                fontSize={15}
-                                p={2}
 
-                            />
-                            <Input
-                                h={10}
-                                w="100%"
-                                rounded={10}
-                                placeholder="Nova Senha"
-                                secureTextEntry
-                                fontSize={15}
-                                p={2}/>
-                            <Input
-                                h={10}
-                                w="100%"
-                                rounded={10}
-                                placeholder="Confirme a nova senha"
-                                secureTextEntry
-                                fontSize={15}
-                                p={2}
+                        />
+                        <Input
+                            h={10}
+                            w="100%"
+                            rounded={10}
+                            placeholder="E-mail"
+                            isDisabled
+                            fontSize={15}
+                            p={2}
+                        />
 
-                            />
+                        <Heading color="gray.400" fontSize="md" mb={5} alignSelf="flex-start" mt={10} >
+                            Alterar senha
+                        </Heading>
 
-                            <Button
+                        <Input
+                            h={10}
+                            w="100%"
+                            rounded={10}
+                            placeholder="Senha antiga"
+                            secureTextEntry
+                            fontSize={15}
+                            p={2}
+
+                        />
+                        <Input
+                            h={10}
+                            w="100%"
+                            rounded={10}
+                            placeholder="Nova Senha"
+                            secureTextEntry
+                            fontSize={15}
+                            p={2} />
+                        <Input
+                            h={10}
+                            w="100%"
+                            rounded={10}
+                            placeholder="Confirme a nova senha"
+                            secureTextEntry
+                            fontSize={15}
+                            p={2}
+
+                        />
+
+                        <Button
                             title="Atualizar"
                             mt={4}
                             mb={2}
-                            />
-                        </Center>
-                    </VStack>
-                </Box>
+                        />
+                    </Center>
+                </VStack>
+
             </Center>
         </ScrollView>
     );

@@ -20,7 +20,7 @@ export function RegisterCard({ name, ...rest }: Props) {
                 />
 
                 <VStack flex={1}>
-                    <Heading fontSize="lg" color="black">
+                    <Heading fontSize="lg" color="black" numberOfLines={1}>
                         {name}
                     </Heading>
 

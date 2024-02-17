@@ -1,13 +1,8 @@
-import { Box, Heading, Image, ScrollView, Text, View, VStack, } from "native-base";
+import { Box, Heading, Image, ScrollView, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-
-
 import { AuthNavigatorRoutesProps } from '@routes/auth.routes';
-
-
 import BackgroundImg from '@assets/imagem.png';
 import { Input } from "@components/Input";
-
 import { Button } from "@components/Button";
 
 
@@ -30,11 +25,13 @@ export function SignIn() {
                             placeholder="E-mail"
                             keyboardType="email-address"
                             autoCapitalize="none"
+                            mx={5}
 
                         />
                         <Input
                             placeholder="Senha"
                             secureTextEntry
+                            mx={5}
                         />
 
 

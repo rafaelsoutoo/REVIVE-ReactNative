@@ -10,13 +10,13 @@ import { Button } from "@components/Button";
 export function Meta() {
     return (
         <ScrollView backgroundColor="#201B2C" contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} py={10}>
-            <Center p={7} mb={10}>
-                <Box bg="#201B2C" w="100%" minH={500}rounded={20} borderColor="#00FF89" borderWidth={1}>
+            <Center p={5} mb={20} >
+                <Box w="100%" minH={600} rounded={20} borderColor="#00FF89" borderWidth={1}>
                     <HeadingMeta
                         title="Nicotina"
                         source={NicotinaGreenPng}
                     />
-                    <VStack bg="#2F2841" w="100%"  rounded={20} mt={5}>
+                    <VStack bg="#2F2841" rounded={20} mt={5}>
                         <Center>
                             <Image
                                 source={Group2x}
