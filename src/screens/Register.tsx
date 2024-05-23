@@ -1,4 +1,4 @@
-import { Box, Center, Heading, Modal, Input, Button, Text, FlatList, View, ScrollView ,VStack} from "native-base";
+import { Box, Center, Heading, Modal, Input, Button, Text, FlatList, View, ScrollView, VStack } from "native-base";
 import { RegisterCard } from '@components/RegisterCard'
 import { TouchableOpacity, Alert } from 'react-native'
 import { MaterialIcons } from '@expo/vector-icons';
@@ -25,9 +25,9 @@ export function Register() {
     const [modalVisible, setModalVisible] = useState(false);
 
     return (
-        <ScrollView backgroundColor="#201B2C"  flex={1} p={5} showsVerticalScrollIndicator={false}>
+        <ScrollView backgroundColor="#201B2C" flex={1} p={5} showsVerticalScrollIndicator={false}>
             <Center mb={20} mt={10}>
-                <Box bg="#2F2841" h="full" w="100%" rounded={20} alignItems='center' p={5} minH={600}  mt={5}>
+                <Box bg="#2F2841" h="full" w="100%" rounded={20} alignItems='center' p={5} minH={600} mt={5}>
                     <Heading color="#00FF89" mt={5} mb={5}>
                         Comprometo-me a parar:
                     </Heading>
