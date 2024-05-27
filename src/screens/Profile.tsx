@@ -99,7 +99,7 @@ export function Profile() {
                             placeholder="Nome"
                             fontSize={15}
                             p={2}
-                            
+
 
 
 
