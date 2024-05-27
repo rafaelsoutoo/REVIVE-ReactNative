@@ -3,6 +3,7 @@ import { api } from '@services/api';
 import { UserDTO } from "@dtos/UserDTO";
 import { storageUserSave, storageUserGet } from "@storage/storageUser";
 import { storageAuthTokenSave, storageAuthTokenGet } from "@storage/storageAuthToken";
+import { AppError } from "@utils/AppError";
 
 export type AuthContextDataProps = {
   user: UserDTO | null;
@@ -24,8 +25,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       if (data.user && data.token) {
         setUser(data.user);
       }
-    } catch (error) {
-      throw error;
+
+    } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        throw new AppError('Usuário não encontrado');
+      } else {
+        throw new AppError('Erro ao fazer login. Tente novamente mais tarde.');
+      }
     }
   }
 

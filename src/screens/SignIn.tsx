@@ -35,8 +35,6 @@ export function SignIn() {
         } catch (error) {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : 'Não foi possível entrar. Tente novamente mais tarde.';
-
-            console.error('Sign in error:', error);
             toast.show({
                 title,
                 placement: 'top',
@@ -71,7 +69,13 @@ export function SignIn() {
                         <Controller
                             control={control}
                             name="password"
-                            rules={{ required: 'Informe a senha' }}
+                            rules={{
+                                required: 'Informe a senha',
+                                minLength: {
+                                    value: 6,
+                                    message: 'A senha deve ter pelo menos 6 caracteres',
+                                },
+                            }}
                             render={({ field: { onChange } }) => (
                                 <Input
                                     placeholder="Senha"
