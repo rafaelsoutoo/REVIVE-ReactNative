@@ -15,7 +15,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function signIn(email: string, password: string) {
     try {
       const { data } = await api.post('/sessions', { email, password });
-      console.log(data);
+      console.log('ebaaaa', data);
     } catch (error) {
       throw error;
     }

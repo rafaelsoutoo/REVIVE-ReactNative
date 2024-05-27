@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const api = axios.create({
-  baseURL: "http://localhost:3333/sessions",
+  baseURL: "http://10.50.0.82:3333",
 })
 
 
