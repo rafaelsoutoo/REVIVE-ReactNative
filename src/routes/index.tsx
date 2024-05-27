@@ -1,15 +1,18 @@
 import { Box } from 'native-base';
-import { NavigationContainer } from "@react-navigation/native";
-
-import { AppRoutes } from "./app.routes";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { AuthRoutes } from "./auth.routes";
+import { AppRoutes } from "./app.routes";
+
+import { useAuth } from '@hooks/useAuth';
 
 export function Routes() {
+  const { user } = useAuth();
+
 
   return (
-    <Box flex={1} bg="#201B2C">
-      <NavigationContainer >
-        <AuthRoutes />
+    <Box flex={1} bg="gray.700">
+      <NavigationContainer>
+        {user ? <AppRoutes /> : <AuthRoutes />}
       </NavigationContainer>
     </Box>
   );
