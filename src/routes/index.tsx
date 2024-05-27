@@ -9,7 +9,7 @@ export function Routes() {
   return (
     <Box flex={1} bg="#201B2C">
       <NavigationContainer >
-        <AppRoutes />
+        <AuthRoutes />
       </NavigationContainer>
     </Box>
   );
