@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, Image, ScrollView, View, VStack, } from "native-base";
+import { Box, Heading, HStack, Image, ScrollView, useToast, View, VStack, } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
@@ -10,16 +10,17 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { TouchableOpacity } from 'react-native'
 
 import BackgroundImg from '@assets/imagem.png';
-
-
+import { useState } from "react";
+import { AppError } from "@utils/AppError";
+import { api } from "@services/api";
+import { useAuth } from "@hooks/useAuth";
 
 type FormDataProps = {
     name: string;
     email: string;
     password: string;
-    password_confirm: string
+    password_confirm: string;
 }
-
 
 const signUpSchema = yup.object({
     name: yup.string().required('Informe o nome.'),
@@ -29,21 +30,63 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
-
-    const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
-        resolver: yupResolver(signUpSchema)
-    });
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigation = useNavigation();
-
     function handleGoBack() {
         navigation.goBack();
     }
 
-    function handleSignUp({ name, email, password, password_confirm }: FormDataProps) {
-        console.log(name, email, password, password_confirm);
+    const { control, handleSubmit, formState: { errors }, reset } = useForm<FormDataProps>({
+        resolver: yupResolver(signUpSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+            password_confirm: ''
+        }
+    });
+
+    const toast = useToast();
+
+    const { signIn } = useAuth();
+
+    async function handleSignUp({ name, email, password }: FormDataProps) {
+        try {
+            setIsLoading(true);
+
+            await api.post('/users', { name, email, password });
+            await signIn(email, password);
+        } catch (error: any) {
+            setIsLoading(false);
+
+            if (error.response && error.response.status === 409) {
+                toast.show({
+                    title: 'E-mail já existe.',
+                    placement: 'top',
+                    bg: 'red.500'
+                });
+            } else {
+                const isAppError = error instanceof AppError;
+                const title = isAppError ? error.message : 'Não foi possível criar a conta. Por Favor, tente mais tarde.';
+
+                toast.show({
+                    title,
+                    placement: 'top',
+                    bg: 'red.500'
+                });
+            }
+        }
     }
 
+    const handleReset = () => {
+        reset({
+            name: '',
+            email: '',
+            password: '',
+            password_confirm: ''
+        });
+    };
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
@@ -60,13 +103,10 @@ export function SignUp() {
                     <Box maxH={450} w={'full'} bg="#2F2841" rounded={32} alignItems="center" >
                         <Heading mt={5} color="#00FF89" mb={6}>Cadastrar</Heading>
 
-
                         <Controller
                             control={control}
                             name="name"
-
                             render={({ field: { onChange, value } }) => (
-
                                 <Input
                                     placeholder="Nome"
                                     p={2}
@@ -83,9 +123,7 @@ export function SignUp() {
                         <Controller
                             control={control}
                             name="email"
-
                             render={({ field: { onChange, value } }) => (
-
                                 <Input
                                     placeholder="E-mail"
                                     keyboardType="email-address"
@@ -104,9 +142,7 @@ export function SignUp() {
                         <Controller
                             control={control}
                             name="password"
-
                             render={({ field: { onChange, value } }) => (
-
                                 <Input
                                     placeholder="Senha"
                                     secureTextEntry
@@ -124,9 +160,7 @@ export function SignUp() {
                         <Controller
                             control={control}
                             name="password_confirm"
-
                             render={({ field: { onChange, value } }) => (
-
                                 <Input
                                     placeholder=" Confirme a Senha"
                                     secureTextEntry
@@ -147,7 +181,11 @@ export function SignUp() {
                             title="Cadastrar"
                             mt={5}
                             mb={5}
-                            onPress={handleSubmit(handleSignUp)}
+                            isLoading={isLoading}
+                            onPress={() => {
+                                handleSubmit(handleSignUp)();
+                                handleReset();
+                            }}
                         />
 
                     </Box>
