@@ -81,8 +81,8 @@ export function SignUp() {
 
     const handleReset = () => {
         reset({
-            name: '',
-            email: '',
+            // name: '',
+            // email: '',
             password: '',
             password_confirm: ''
         });
