@@ -1,8 +1,6 @@
 import { createContext, ReactNode, useState } from "react";
 import { api } from '@services/api';
 import { UserDTO } from "@dtos/UserDTO";
-import { storageUserSave, storageUserGet } from "@storage/storageUser";
-import { storageAuthTokenSave, storageAuthTokenGet } from "@storage/storageAuthToken";
 import { AppError } from "@utils/AppError";
 
 export type AuthContextDataProps = {
