@@ -12,12 +12,7 @@ export function HeadingMeta({ title, ...rest }: Props) {
                 <Titulo color="#00FF89" mt={5}>
                     {title}
                 </Titulo>
-                <Image
-                    alt="Imagem Logo"
-                    ml={2}
-                    mt={6}
-                    {...rest}
-                />
+              
             </HStack>
         </Center>
     );
