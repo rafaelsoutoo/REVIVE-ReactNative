@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, VStack } from 'native-base';
 import { TouchableOpacity, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRegister } from '@components/RegisterContext'; 
+import { useRegister } from '@contexts/RegisterContext'; 
 import { RegisterCard } from '../components/RegisterCard';
 
 export function Register() {

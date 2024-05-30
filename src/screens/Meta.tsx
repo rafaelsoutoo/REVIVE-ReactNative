@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { Center, ScrollView, useToast, Text, View, Button } from "native-base";
+import { Center,  useToast, Text, View, Button } from "native-base";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import { Slide } from '@components/MetaSwiper';
-import { useRegister } from '@components/RegisterContext';
+import { useRegister } from '@contexts/RegisterContext'; 
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 export function Meta() {

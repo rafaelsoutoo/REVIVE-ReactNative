@@ -30,8 +30,6 @@ export function AppRoutes() {
                 height: 60,
                 
             },
-            
-
         }}>
 
             
