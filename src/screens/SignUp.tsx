@@ -79,14 +79,14 @@ export function SignUp() {
         }
     }
 
-    const handleReset = () => {
-        reset({
-            // name: '',
-            // email: '',
-            password: '',
-            password_confirm: ''
-        });
-    };
+    // const handleReset = () => {
+    //     reset({
+    //         // name: '',
+    //         // email: '',
+    //         password: '',
+    //         password_confirm: ''
+    //     });
+    // };
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>

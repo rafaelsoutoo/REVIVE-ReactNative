@@ -1,28 +1,27 @@
-import { Box, Center, Heading, Modal, Input, Button, Text, FlatList, View, ScrollView, VStack } from "native-base";
-import { RegisterCard } from '@components/RegisterCard'
-import { TouchableOpacity, Alert } from 'react-native'
+// screens/Register.tsx
+import React, { useState } from 'react';
+import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, VStack } from 'native-base';
+import { TouchableOpacity, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react'
-
+import { useRegister } from '@components/RegisterContext'; 
+import { RegisterCard } from '../components/RegisterCard';
 
 export function Register() {
-
-    const [register, setRegister] = useState<string[]>([]);
+    const { register, addRegister } = useRegister();
     const [registerName, setRegisterName] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
-    function handleParticipantAdd() {
+    function handleVicioAdd() {
         if (!registerName.trim()) {
             return Alert.alert("Nome inválido", "Por favor, digite um nome válido.");
         }
         if (register.includes(registerName)) {
             return Alert.alert("Nome existente", "Já existe esse nome.");
         }
-        setRegister(prevState => [...prevState, registerName]);
-        setRegisterName(''); // Limpar o input após adicionar o nome
-        setModalVisible(false); // Fechar o modal após adicionar o nome
+        addRegister(registerName);
+        setRegisterName('');
+        setModalVisible(false);
     }
-
-    const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <ScrollView backgroundColor="#201B2C" flex={1} p={5} showsVerticalScrollIndicator={false}>
@@ -33,12 +32,8 @@ export function Register() {
                     </Heading>
 
                     <TouchableOpacity style={{ marginLeft: 200, marginBottom: 16 }} onPress={() => setModalVisible(true)}>
-                        <MaterialIcons
-                            name="library-add"
-                            size={45} color="#00FF89"
-                        />
+                        <MaterialIcons name="library-add" size={45} color="#00FF89" />
                     </TouchableOpacity>
-
 
                     {register.length === 0 ? (
                         <Text color="white" mt={32}>Nada encontrado, Adicione!</Text>
@@ -47,17 +42,14 @@ export function Register() {
                             {register.map((item, index) => (
                                 <RegisterCard key={index} name={item} />
                             ))}
-                        </VStack>)}
-
-
-
+                        </VStack>
+                    )}
                 </Box>
-                <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)} >
-                    <Modal.Content maxWidth="400px"  >
+                <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
+                    <Modal.Content maxWidth="400px">
                         <Modal.CloseButton />
-                        <Modal.Header >Adicine Para Monitorar</Modal.Header>
-                        <Modal.Body  >
-
+                        <Modal.Header>Adicione Para Monitorar</Modal.Header>
+                        <Modal.Body>
                             <Center>
                                 <Input
                                     h={10}
@@ -65,7 +57,7 @@ export function Register() {
                                     placeholder={"Digite o nome"}
                                     onChangeText={text => setRegisterName(text)}
                                     value={registerName}
-                                    onSubmitEditing={(handleParticipantAdd)}
+                                    onSubmitEditing={handleVicioAdd}
                                     returnKeyType='send'
                                 />
                                 <Button
@@ -73,10 +65,8 @@ export function Register() {
                                     h={10}
                                     bg="#00FF89"
                                     px={10}
-                                    _pressed={{
-                                        bg: 'green.600'
-                                    }}
-                                    onPress={handleParticipantAdd}
+                                    _pressed={{ bg: 'green.600' }}
+                                    onPress={handleVicioAdd}
                                 >
                                     <Text fontSize={16} fontWeight={"bold"}>Criar</Text>
                                 </Button>
@@ -85,7 +75,6 @@ export function Register() {
                     </Modal.Content>
                 </Modal>
             </Center>
-
-        </ ScrollView>
+        </ScrollView>
     );
 }
