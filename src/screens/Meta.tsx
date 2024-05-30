@@ -1,100 +1,72 @@
-import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Center,  useToast, Text, View, Button } from "native-base";
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
-import { Center, ScrollView, Box, VStack, Image, Heading } from "native-base";
-
-import { HeadingMeta } from '@components/HeadingMeta';
-import NicotinaGreenPng from '@assets/nicotinaGreen.png';
-import Group2x from '@assets/Group2x.png';
-import { Button } from "@components/Button";
-
-
-const styles = StyleSheet.create({
-    wrapper: {},
-    slide: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 10,
-    },
-    pagination: {
-        bottom: 765, 
-    },
-});
-
-const NicotinaSlide = () => (
-    <View style={styles.slide}>
-        <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>
-            <VStack bg="#2F2841" rounded={20} p={4}>
-                <Center>    
-                    <HeadingMeta title="Nicotina"  />
-                    <Image source={Group2x} alt="imagem principal" mt={12} mb={10} />
-                    <Heading color="#00FF89" mb={3}>Tempo de abstinência</Heading>
-                    <Heading color="white">256d 12h 22m 1s</Heading>
-                    <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
-                    <Heading color="white">R$ 1.321,85</Heading>
-                    <Button title="Recaída" mt={16} mb={10} />
-                </Center>
-            </VStack>
-        </Box>
-    </View>
-);
-const RedioSlide = () => (
-    <View style={styles.slide}>
-        <Box w="100%" rounded={20}  borderColor="#00FF89" borderWidth={1}>
-            <VStack bg="#2F2841" rounded={20} p={4}>
-                <Center>
-                    <HeadingMeta title="Radio"  />
-                    <Image source={Group2x} alt="imagem principal" mt={12} mb={10} />
-                    <Heading color="#00FF89" mb={3}>Tempo de abstinência</Heading>
-                    <Heading color="white">256d 12h 22m 1s</Heading>
-                    <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
-                    <Heading color="white">R$ 1.321,85</Heading>
-                    <Button title="Recaída" mt={16} mb={10} />
-                </Center>
-            </VStack>
-        </Box>
-    </View>
-);
-
-const AlcoolSlide = () => (
-    <View style={styles.slide}>
-        <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>
-            <VStack bg="#2F2841" rounded={20} p={4}>
-                <Center>
-                    <HeadingMeta title="Álcool" />
-                    <Image source={Group2x} alt="imagem principal" mt={12} mb={10} />
-                    <Heading color="#00FF89" mb={3}>Tempo de abstinência</Heading>
-                    <Heading color="white">128d 5h 18m 45s</Heading>
-                    <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
-                    <Heading color="white">R$ 950,50</Heading>
-                    <Button title="Recaída" mt={16} mb={10} />
-                </Center>
-            </VStack>
-        </Box>
-    </View>
-);
+import { Slide } from '@components/MetaSwiper';
+import { useRegister } from '@contexts/RegisterContext'; 
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 export function Meta() {
+    const { register } = useRegister();
+    const [isLoading, setIsLoading] = useState(false);
+    const toast = useToast();
+    const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+
+    async function fetchHistory() {
+        try {
+            setIsLoading(true);
+        } catch (error) {
+            const title = 'Não foi possível carregar os detalhes do exercício';
+
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchHistory();
+        }, [])
+    );
+
     return (
-      <View style={{backgroundColor:"#201B2C"}} >
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <Center px={4}>
-                <Swiper
-                     style={styles.wrapper}
-                     showsButtons={false}
-                     paginationStyle={styles.pagination}
-                     activeDotColor="#00FF89"
-                >
-                    <NicotinaSlide />
-                    <AlcoolSlide />
-                    <RedioSlide/>
-                </Swiper>
+        <View flex={1} backgroundColor="#201B2C">
+            <Center flex={1} px={4}>
+                {isLoading ? (
+                    <Text>Loading...</Text>
+                ) : (
+                    register.length === 0 ? (
+                        <Center flex={1}>
+                            <Text color="gray.100" textAlign="center">
+                                Não há registros ainda. {'\n'}
+                                Adicione registros na tela de cadastro.
+                            </Text>
+                            <Button rounded={14} mt={4} background="#00FF89" _pressed={{background:'green.600'}} onPress={() => navigation.navigate('register')}>
+                                <Text fontWeight='bold'>
+                                    Adicionar
+                                </Text>
+
+                            </Button>
+                        </Center>
+                    ) : (
+                        <Swiper
+                            paginationStyle={{ bottom: 740 }} // Ajuste conforme necessário
+                            dotColor="gray"
+                            activeDotColor="#00FF89"
+                        >
+                            {register.map((item, index) => (
+                                <Slide key={index} data={{ name: item }} />
+                            ))}
+                        </Swiper>
+                    )
+                )}
             </Center>
-        </ScrollView>
-
-      </View>
-
+        </View>
     );
 }
-

@@ -26,7 +26,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
-        throw new AppError('Usuário não encontrado');
+        throw new AppError('E-mail e/ou senha incorreta');
       } else {
         throw new AppError('Erro ao fazer login. Tente novamente mais tarde.');
       }
