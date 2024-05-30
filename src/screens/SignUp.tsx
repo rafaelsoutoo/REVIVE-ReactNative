@@ -184,7 +184,7 @@ export function SignUp() {
                             isLoading={isLoading}
                             onPress={() => {
                                 handleSubmit(handleSignUp)();
-                                handleReset();
+                                // handleReset();
                             }}
                         />
 

@@ -54,7 +54,13 @@ export function SignIn() {
                         <Controller
                             control={control}
                             name="email"
-                            rules={{ required: 'Informe o e-mail' }}
+                            rules={{
+                                required: 'Informe o e-mail',
+                                pattern: {
+                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    message: 'Invalid email address'
+                                }
+                            }}
                             render={({ field: { onChange } }) => (
                                 <Input
                                     placeholder="E-mail"
