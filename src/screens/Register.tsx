@@ -5,11 +5,14 @@ import { TouchableOpacity, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRegister } from '@contexts/RegisterContext'; 
 import { RegisterCard } from '../components/RegisterCard';
+import { useNavigation } from '@react-navigation/native';
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
 
 export function Register() {
     const { register, addRegister } = useRegister();
     const [registerName, setRegisterName] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     function handleVicioAdd() {
         if (!registerName.trim()) {
@@ -21,6 +24,7 @@ export function Register() {
         addRegister(registerName);
         setRegisterName('');
         setModalVisible(false);
+        navigation.navigate('meta')
     }
 
     return (
