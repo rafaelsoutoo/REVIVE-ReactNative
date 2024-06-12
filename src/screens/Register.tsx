@@ -1,6 +1,5 @@
-// screens/Register.tsx
 import React, { useState, useContext, useEffect } from 'react';
-import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast } from 'native-base';
+import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast, VStack } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RegisterCard } from '../components/RegisterCard';
@@ -9,13 +8,21 @@ import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
 import { AuthContext } from '@contexts/AuthContext';
+import { RegisterDTO } from '@dtos/RegisterDTO';
 
 export function Register() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [vice, setVice] = useState<RegisterDTO[]>([]);
+
     const [registerName, setRegisterName] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
     const toast = useToast();
     const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        fetchVices();
+    }, [user]);
 
     async function handleCreateVice() {
         try {
@@ -26,15 +33,7 @@ export function Register() {
                     bgColor: 'red.500'
                 });
             }
-
-            if (!user) {
-                console.error("Usuário não encontrado no contexto de autenticação.");
-                return;
-            }
-
-            const userId = user.id; 
-
-            console.log(`Enviando solicitação para criar vício com userId: ${userId} e name: ${registerName}`);
+            const userId = user?.id;
             await api.post(`/create/vice/${userId}`, { name: registerName });
 
             toast.show({
@@ -44,7 +43,7 @@ export function Register() {
             });
 
             setModalVisible(false);
-            navigation.navigate('meta');
+            fetchVices();
         } catch (error) {
             console.error("Erro ao tentar criar vício:", error);
             const isAppError = error instanceof AppError;
@@ -60,6 +59,26 @@ export function Register() {
         }
     }
 
+    async function fetchVices() {
+        try {
+            setIsLoading(true);
+
+            const userId = user?.id;
+            const response = await api.get(`/get/vice/${userId}`);
+            setVice(response.data);
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível carregar seu registros';
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
         <ScrollView backgroundColor="#201B2C" flex={1} p={5} showsVerticalScrollIndicator={false}>
             <Center mb={20} mt={10}>
@@ -71,6 +90,21 @@ export function Register() {
                     <TouchableOpacity style={{ marginLeft: 200, marginBottom: 16 }} onPress={() => setModalVisible(true)}>
                         <MaterialIcons name="library-add" size={45} color="#00FF89" />
                     </TouchableOpacity>
+
+                    {isLoading ? (
+                        <Text color="white" mt={32}>Carregando...</Text>
+                    ) : (
+                        <VStack space={4} alignItems="center" width="100%">
+                            {vice.length === 0 ? (
+                                <Text color="white" mt={32}>Nada encontrado, Adicione!</Text>
+                            ) : (
+                                vice.map((item) => (
+                                    <RegisterCard key={item.viceId} data={item} />
+                                ))
+                            )}
+                        </VStack>
+                    )}
+
                 </Box>
                 <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
                     <Modal.Content maxWidth="400px">
