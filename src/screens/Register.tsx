@@ -1,30 +1,63 @@
 // screens/Register.tsx
-import React, { useState } from 'react';
-import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, VStack } from 'native-base';
-import { TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useContext, useEffect } from 'react';
+import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast } from 'native-base';
+import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useRegister } from '@contexts/RegisterContext'; 
 import { RegisterCard } from '../components/RegisterCard';
 import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+import { AuthContext } from '@contexts/AuthContext';
 
 export function Register() {
-    const { register, addRegister } = useRegister();
     const [registerName, setRegisterName] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
+    const toast = useToast();
+    const { user } = useContext(AuthContext);
 
-    function handleVicioAdd() {
-        if (!registerName.trim()) {
-            return Alert.alert("Nome inválido", "Por favor, digite um nome válido.");
+    async function handleCreateVice() {
+        try {
+            if (!registerName.trim()) {
+                return toast.show({
+                    title: "Nome inválido",
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+            }
+
+            if (!user) {
+                console.error("Usuário não encontrado no contexto de autenticação.");
+                return;
+            }
+
+            const userId = user.id; 
+
+            console.log(`Enviando solicitação para criar vício com userId: ${userId} e name: ${registerName}`);
+            await api.post(`/create/vice/${userId}`, { name: registerName });
+
+            toast.show({
+                title: 'Parabéns! Vício adicionado com sucesso.',
+                placement: 'top',
+                bgColor: 'green.500'
+            });
+
+            setModalVisible(false);
+            navigation.navigate('meta');
+        } catch (error) {
+            console.error("Erro ao tentar criar vício:", error);
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
+
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        } finally {
+            setRegisterName('');
         }
-        if (register.includes(registerName)) {
-            return Alert.alert("Nome existente", "Já existe esse nome.");
-        }
-        addRegister(registerName);
-        setRegisterName('');
-        setModalVisible(false);
-        navigation.navigate('meta')
     }
 
     return (
@@ -38,16 +71,6 @@ export function Register() {
                     <TouchableOpacity style={{ marginLeft: 200, marginBottom: 16 }} onPress={() => setModalVisible(true)}>
                         <MaterialIcons name="library-add" size={45} color="#00FF89" />
                     </TouchableOpacity>
-
-                    {register.length === 0 ? (
-                        <Text color="white" mt={32}>Nada encontrado, Adicione!</Text>
-                    ) : (
-                        <VStack space={4} alignItems="center" width="100%">
-                            {register.map((item, index) => (
-                                <RegisterCard key={index} name={item} />
-                            ))}
-                        </VStack>
-                    )}
                 </Box>
                 <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
                     <Modal.Content maxWidth="400px">
@@ -61,8 +84,6 @@ export function Register() {
                                     placeholder={"Digite o nome"}
                                     onChangeText={text => setRegisterName(text)}
                                     value={registerName}
-                                    onSubmitEditing={handleVicioAdd}
-                                    returnKeyType='send'
                                 />
                                 <Button
                                     mt={5}
@@ -70,7 +91,7 @@ export function Register() {
                                     bg="#00FF89"
                                     px={10}
                                     _pressed={{ bg: 'green.600' }}
-                                    onPress={handleVicioAdd}
+                                    onPress={handleCreateVice}
                                 >
                                     <Text fontSize={16} fontWeight={"bold"}>Criar</Text>
                                 </Button>
