@@ -1,4 +1,4 @@
 export type RegisterDTO = {
-    viceId: string
+    id: string
     name: string
 }

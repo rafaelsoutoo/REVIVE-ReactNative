@@ -99,7 +99,7 @@ export function Register() {
                                 <Text color="white" mt={32}>Nada encontrado, Adicione!</Text>
                             ) : (
                                 vice.map((item) => (
-                                    <RegisterCard key={item.viceId} data={item} />
+                                    <RegisterCard key={item.id} data={item} />
                                 ))
                             )}
                         </VStack>
