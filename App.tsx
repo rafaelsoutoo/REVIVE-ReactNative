@@ -6,7 +6,6 @@ import { AuthContextProvider } from '@contexts/AuthContext';
 import { Routes } from '@routes/index';
 
 import { Loading } from './src/components/Loading';
-import { RegisterProvider } from '@contexts/RegisterContext'; 
 
 
 
@@ -21,9 +20,7 @@ export default function App() {
         translucent
       />
       <AuthContextProvider>
-        <RegisterProvider>
           {fontsLoaded ? < Routes /> : <Loading />}
-        </RegisterProvider>
       </AuthContextProvider>
 
     </NativeBaseProvider>

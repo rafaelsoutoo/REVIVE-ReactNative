@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useState } from "react";
+// AuthContext.tsx
+import { createContext, ReactNode, useState, useEffect } from "react";
 import { api } from '@services/api';
 import { UserDTO } from "@dtos/UserDTO";
 import { AppError } from "@utils/AppError";
@@ -22,6 +23,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       const { data } = await api.post('/sessions', { email, password });
       if (data.user && data.token) {
         setUser(data.user);
+        console.log("Usuário autenticado:", data.user);
       }
 
     } catch (error: any) {
@@ -32,7 +34,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
       }
     }
   }
-
 
   return (
     <AuthContext.Provider value={{ user, signIn }}>

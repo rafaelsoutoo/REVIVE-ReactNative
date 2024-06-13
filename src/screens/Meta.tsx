@@ -1,23 +1,27 @@
-import React, { useCallback, useState } from 'react';
-import { Center,  useToast, Text, View, Button } from "native-base";
+import React, { useCallback, useState, useContext } from 'react';
+import { Center, useToast, Text, View, Button } from "native-base";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import { Slide } from '@components/MetaSwiper';
-import { useRegister } from '@contexts/RegisterContext'; 
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
+import { AuthContext } from '@contexts/AuthContext'; 
+import { api } from '@services/api'; 
 
 export function Meta() {
-    const { register } = useRegister();
+    const { user } = useContext(AuthContext);
+    const [register, setRegister] = useState([]); 
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-
-    async function fetchHistory() {
+    async function fetchVices() {
         try {
             setIsLoading(true);
+            const userId = user?.id;
+            const response = await api.get(`/get/vice/${userId}`);
+            setRegister(response.data);
         } catch (error) {
-            const title = 'Não foi possível carregar os detalhes do exercício';
+            const title = 'Não foi possível carregar registros';
 
             toast.show({
                 title,
@@ -31,7 +35,7 @@ export function Meta() {
 
     useFocusEffect(
         useCallback(() => {
-            fetchHistory();
+            fetchVices();
         }, [])
     );
 
@@ -51,17 +55,16 @@ export function Meta() {
                                 <Text fontWeight='bold'>
                                     Adicionar
                                 </Text>
-
                             </Button>
                         </Center>
                     ) : (
                         <Swiper
-                            paginationStyle={{ bottom: 740 }} // Ajuste conforme necessário
+                            paginationStyle={{ bottom: 740 }}
                             dotColor="gray"
                             activeDotColor="#00FF89"
                         >
                             {register.map((item, index) => (
-                                <Slide key={index} data={{ name: item }} />
+                                <Slide key={index} data={item} />
                             ))}
                         </Swiper>
                     )
