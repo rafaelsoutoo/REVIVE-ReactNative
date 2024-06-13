@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast, VStack } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -7,8 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
-import { AuthContext } from '@contexts/AuthContext';
 import { RegisterDTO } from '@dtos/RegisterDTO';
+import { useAuth } from '@hooks/useAuth';
 
 export function Register() {
     const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,7 @@ export function Register() {
     const [modalVisible, setModalVisible] = useState(false);
     const navigation = useNavigation<AppNavigatorRoutesProps>();
     const toast = useToast();
-    const { user } = useContext(AuthContext);
+    const { user } = useAuth();
 
     useEffect(() => {
         fetchVices();
@@ -26,7 +26,7 @@ export function Register() {
 
     async function handleCreateVice() {
         try {
-            const userId = user?.id;
+            const userId = user.id;
             await api.post(`/create/vice/${userId}`, { name: registerName });
 
             toast.show({
@@ -62,7 +62,7 @@ export function Register() {
         try {
             setIsLoading(true);
 
-            const userId = user?.id;
+            const userId = user.id;
             const response = await api.get(`/get/vice/${userId}`);
             setVice(response.data);
         } catch (error: any) {

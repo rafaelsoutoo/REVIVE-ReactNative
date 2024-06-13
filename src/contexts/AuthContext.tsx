@@ -5,7 +5,7 @@ import { UserDTO } from "@dtos/UserDTO";
 import { AppError } from "@utils/AppError";
 
 export type AuthContextDataProps = {
-  user: UserDTO | null;
+  user: UserDTO;
   signIn: (email: string, password: string) => Promise<void>;
 };
 
@@ -16,14 +16,13 @@ type AuthContextProviderProps = {
 export const AuthContext = createContext<AuthContextDataProps>({} as AuthContextDataProps);
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [user, setUser] = useState<UserDTO | null>(null);
+  const [user, setUser] = useState<UserDTO>({} as UserDTO);
 
   async function signIn(email: string, password: string) {
     try {
       const { data } = await api.post('/sessions', { email, password });
       if (data.user && data.token) {
         setUser(data.user);
-        console.log("Usuário autenticado:", data.user);
       }
 
     } catch (error: any) {
