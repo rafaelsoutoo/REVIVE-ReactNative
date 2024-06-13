@@ -26,13 +26,6 @@ export function Register() {
 
     async function handleCreateVice() {
         try {
-            if (!registerName.trim()) {
-                return toast.show({
-                    title: "Nome inválido",
-                    placement: 'top',
-                    bgColor: 'red.500'
-                });
-            }
             const userId = user?.id;
             await api.post(`/create/vice/${userId}`, { name: registerName });
 
@@ -44,16 +37,22 @@ export function Register() {
 
             setModalVisible(false);
             fetchVices();
-        } catch (error) {
-            console.error("Erro ao tentar criar vício:", error);
+        } catch (error: any) {
             const isAppError = error instanceof AppError;
-            const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
-
-            toast.show({
-                title,
-                placement: 'top',
-                bgColor: 'red.500'
-            });
+            if (error.response && error.response.status === 409) {
+                toast.show({
+                    title: "Nome já existente",
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+            }else {
+                const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
+                toast.show({
+                    title,
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+            }
         } finally {
             setRegisterName('');
         }
@@ -66,14 +65,18 @@ export function Register() {
             const userId = user?.id;
             const response = await api.get(`/get/vice/${userId}`);
             setVice(response.data);
-        } catch (error) {
-            const isAppError = error instanceof AppError;
-            const title = isAppError ? error.message : 'Não foi possível carregar seu registros';
-            toast.show({
-                title,
-                placement: 'top',
-                bgColor: 'red.500'
-            });
+        } catch (error: any) {
+            if (error.response && error.response.status === 404) {
+                console.log('não possuí registros')
+            } else {
+                const isAppError = error instanceof AppError;
+                const title = isAppError ? error.message : 'Não foi possível carregar os seus registros';
+                toast.show({
+                    title,
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+            }
         } finally {
             setIsLoading(false);
         }

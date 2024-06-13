@@ -6,6 +6,7 @@ import { Slide } from '@components/MetaSwiper';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { AuthContext } from '@contexts/AuthContext'; 
 import { api } from '@services/api'; 
+import { AppError } from '@utils/AppError';
 
 export function Meta() {
     const { user } = useContext(AuthContext);
@@ -14,20 +15,24 @@ export function Meta() {
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    async function fetchVices() {
+    async function fetchVicesSwiper() {
         try {
             setIsLoading(true);
             const userId = user?.id;
             const response = await api.get(`/get/vice/${userId}`);
             setRegister(response.data);
-        } catch (error) {
-            const title = 'Não foi possível carregar registros';
-
-            toast.show({
-                title,
-                placement: 'top',
-                bgColor: 'red.500'
-            });
+        } catch (error: any) {
+            if(error.response && error.response.status === 404){
+                console.log('não possuí registros')
+            }else{
+                const isAppError = error instanceof AppError;
+                const title = isAppError ? error.message : 'Não foi possível carregar os seus registros';
+                toast.show({
+                  title,
+                  placement: 'top',
+                  bgColor: 'red.500'
+                });
+            }
         } finally {
             setIsLoading(false);
         }
@@ -35,7 +40,7 @@ export function Meta() {
 
     useFocusEffect(
         useCallback(() => {
-            fetchVices();
+            fetchVicesSwiper();
         }, [])
     );
 
@@ -43,7 +48,7 @@ export function Meta() {
         <View flex={1} backgroundColor="#201B2C">
             <Center flex={1} px={4}>
                 {isLoading ? (
-                    <Text>Loading...</Text>
+                    <Text color="white">Loading...</Text>
                 ) : (
                     register.length === 0 ? (
                         <Center flex={1}>
