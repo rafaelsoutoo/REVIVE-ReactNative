@@ -3,6 +3,7 @@ import { createContext, ReactNode, useState, useEffect } from "react";
 import { api } from '@services/api';
 import { UserDTO } from "@dtos/UserDTO";
 import { AppError } from "@utils/AppError";
+import { RegisterDTO } from "@dtos/RegisterDTO";
 
 export type AuthContextDataProps = {
   user: UserDTO;
