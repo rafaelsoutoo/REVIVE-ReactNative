@@ -8,6 +8,7 @@ import { RegisterDTO } from '@dtos/RegisterDTO';
 
 type Props = {
     data: RegisterDTO
+    time: string,
 }
 
 const styles = StyleSheet.create({
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
     },    
 });
 
-export function Slide({ data }: Props) {
+export function Slide({ data, time }: Props) {
     return (
         <View style={styles.slide}>
             <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>
@@ -28,7 +29,7 @@ export function Slide({ data }: Props) {
                         <HeadingMeta title={data.name}/>
                         <Image source={Group2x} alt="imagem principal" mt={12} mb={10} />
                         <Heading color="#00FF89" mb={3}>Tempo de abstinência</Heading>
-                        <Heading color="white">256d 12h 22m 1s</Heading>
+                        <Heading color="white">{time}</Heading>
                         <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
                         <Heading color="white">R$ 1.321,85</Heading>
                         <Button title="Recaída" mt={16} mb={10} />
