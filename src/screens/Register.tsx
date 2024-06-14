@@ -99,7 +99,7 @@ export function Register() {
                     ) : (
                         <VStack space={4} alignItems="center" width="100%">
                             {vice.length === 0 ? (
-                                <Text color="white" mt={32}>Nada encontrado, Adicione!</Text>
+                                <Text color="white" fontWeight="bold" mt={32}>Nada encontrado, Adicione!</Text>
                             ) : (
                                 vice.map((item) => (
                                     <RegisterCard key={item.id} data={item} />

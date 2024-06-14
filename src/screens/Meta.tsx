@@ -8,6 +8,7 @@ import { AuthContext } from '@contexts/AuthContext';
 import { api } from '@services/api'; 
 import { AppError } from '@utils/AppError';
 import { RegisterDTO } from '@dtos/RegisterDTO';
+import { Loading } from '@components/Loading';
 
 interface RegisterWithTimeDTO extends RegisterDTO {
     timeInSeconds: number;
@@ -93,7 +94,7 @@ export function Meta() {
         <View flex={1} backgroundColor="#201B2C">
             <Center flex={1} px={4}>
                 {isLoading ? (
-                    <Text color="white">Loading...</Text>
+                    <Loading/>
                 ) : (
                     register.length === 0 ? (
                         <Center flex={1}>

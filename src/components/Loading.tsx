@@ -3,7 +3,7 @@ import { Center, Spinner } from 'native-base';
 export function Loading() {
   return (
     <Center>
-      <Spinner color="green.500" />
+      <Spinner color="#00FF89"  size="lg"/>
     </Center>
   );
 }
