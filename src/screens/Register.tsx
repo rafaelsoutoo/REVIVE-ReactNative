@@ -26,6 +26,13 @@ export function Register() {
 
     async function handleCreateVice() {
         try {
+            if (vice.some(item => item.name.toLowerCase() === registerName.toLowerCase())) {
+                return toast.show({
+                    title: "Nome já existe",
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+            }
             const userId = user.id;
             await api.post(`/create/vice/${userId}`, { name: registerName });
 
@@ -39,20 +46,13 @@ export function Register() {
             fetchVices();
         } catch (error: any) {
             const isAppError = error instanceof AppError;
-            if (error.response && error.response.status === 409) {
-                toast.show({
-                    title: "Nome já existente",
-                    placement: 'top',
-                    bgColor: 'red.500'
-                });
-            }else {
-                const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
-                toast.show({
-                    title,
-                    placement: 'top',
-                    bgColor: 'red.500'
-                });
-            }
+            const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            })
+            
         } finally {
             setRegisterName('');
         }
