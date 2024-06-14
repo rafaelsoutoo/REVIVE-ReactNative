@@ -10,17 +10,15 @@ import { AppError } from '@utils/AppError';
 import { RegisterDTO } from '@dtos/RegisterDTO';
 import { Loading } from '@components/Loading';
 
-interface RegisterWithTimeDTO extends RegisterDTO {
-    timeInSeconds: number;
-    date: string;
-}
 
 export function Meta() {
     const { user } = useContext(AuthContext);
-    const [register, setRegister] = useState<RegisterWithTimeDTO[]>([]); 
+    const [register, setRegister] = useState<RegisterDTO[]>([]); 
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
+    
+
 
     async function fetchVicesSwiper() {
         try {
@@ -90,6 +88,18 @@ export function Meta() {
         return `${days}d ${hours}h ${minutes}m ${secs}s`;
     };
 
+
+    async function handleResetTime() {
+        console.log("Resetou")
+        toast.show({
+            title: `Resetou`,
+            placement: 'top',
+            bgColor: 'red.500'
+        });
+
+        
+    }
+
     return (
         <View flex={1} backgroundColor="#201B2C">
             <Center flex={1} px={4}>
@@ -119,6 +129,7 @@ export function Meta() {
                                     key={index} 
                                     data={item}
                                     time={formatElapsedTime(item.timeInSeconds)}
+                                    onResetTime={handleResetTime}
                                 />
                             ))}
                         </Swiper>

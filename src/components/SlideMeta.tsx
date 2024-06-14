@@ -9,6 +9,7 @@ import { RegisterDTO } from '@dtos/RegisterDTO';
 type Props = {
     data: RegisterDTO
     time: string,
+    onResetTime: () => void; 
 }
 
 const styles = StyleSheet.create({
@@ -20,7 +21,9 @@ const styles = StyleSheet.create({
     },    
 });
 
-export function SlideMeta({ data, time }: Props) {
+
+
+export function SlideMeta({ data, time, onResetTime }: Props) {
     return (
         <View style={styles.slide}>
             <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>
@@ -32,7 +35,7 @@ export function SlideMeta({ data, time }: Props) {
                         <Heading color="white">{time}</Heading>
                         <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
                         <Heading color="white">R$ 1.321,85</Heading>
-                        <Button title="Recaída" mt={16} mb={10} />
+                        <Button title="Recaída" mt={16} mb={10} onPress={onResetTime} />
                     </Center>
                 </VStack>
             </Box>
