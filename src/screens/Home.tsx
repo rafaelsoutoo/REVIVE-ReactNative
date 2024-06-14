@@ -1,4 +1,4 @@
-import { Box, VStack, Image, Center, Text, HStack, Heading, ScrollView, useToast, FlatList } from "native-base";
+import { Box, VStack, Image, Center, Text, HStack, Heading, ScrollView, useToast, FlatList, Button, View } from "native-base";
 import MentalPng from '@assets/Mental.png';
 import IconHomePng from '@assets/Group.png'
 import { useAuth } from "@hooks/useAuth";
@@ -6,8 +6,10 @@ import { useCallback, useEffect, useState } from "react";
 import { RegisterDTO } from "@dtos/RegisterDTO";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { SlideHomeMoney, SlideHomeTime } from "@components/SlideHome";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { Loading } from "@components/Loading";
 
 
 interface RegisterWithTimeDTO extends RegisterDTO {
@@ -16,6 +18,7 @@ interface RegisterWithTimeDTO extends RegisterDTO {
 }
 
 export function Home() {
+    const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     const { user } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +97,7 @@ export function Home() {
     return (
         <ScrollView bg="#201B2C" flex={1} py={10} showsVerticalScrollIndicator={false}>
             <Center p={6}>
-                <Box bg="#2F2841" w="100%" rounded={20} alignItems='center' p={6}>
+                <Box bg="#2F2841" w="100%" rounded={20} alignItems='center' p={6} minH="300">
                     <VStack alignItems="center">
                         <Heading color="#00FF89" mt={2} fontSize={20}>
                             <Text color="#00FF89" fontSize={24}>
@@ -109,24 +112,34 @@ export function Home() {
                             mb={5}
                         />
                         {isLoading ? (
-                            <Box bg="#00FF89" rounded="10" py={12} px={100} w="100%">
-                                <Text color="black">Loading...</Text>
-                            </Box>
+                            <View mt={10}>
+                                <Loading/>
+                            </View>
+                            
                         ) : (
-                            <Box bg="#00FF89" rounded="10" py={3} px={5} w="100%">
-                                <Heading fontSize={16}>
-                                    Comprometid@ a me livrar de:
-                                </Heading>
-                                <Text ml={4} mt={2}>
-                                    {vices.length === 0 ? (
-                                        "Nenhum vice registrado"
-                                    ) : (
-                                        vices.map((vice, index) => (
-                                            <Text key={index}>- {vice.name}{'\n'}</Text>
-                                        ))
-                                    )}
-                                </Text>
-                            </Box>
+                            <>
+                                {vices.length === 0 ? (
+                                    <Box alignItems="center">
+                                            <Text mt={5} fontWeight='bold' color="white">Ainda Não Possui nada Registrado!</Text>
+                                        <Button rounded={14} mt={5} background="#2F2841" borderWidth={1} borderColor="#00FF89" _pressed={{ background: 'gray.800' }} onPress={() => navigation.navigate('register')}>
+                                            <Text fontWeight='bold' color="#00FF89">Vamos lá?</Text>
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Box bg="#00FF89" rounded="10" py={3} px={5} w="100%">
+                                        <>
+                                            <Heading fontSize={16}>
+                                                Comprometid@ a me livrar de:
+                                            </Heading>
+                                            <Text ml={4} mt={2}>
+                                                {vices.map((vice, index) => (
+                                                    <Text key={index}>- {vice.name}{'\n'}</Text>
+                                                ))}
+                                            </Text>
+                                        </>
+                                    </Box>
+                                )}
+                            </>
                         )}
                         <HStack mt={5} >
                             <FlatList

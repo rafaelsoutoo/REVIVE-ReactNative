@@ -20,7 +20,7 @@ export function SlideHomeTime({ data, time }: Props) {
         <View style={styles.slide}>
             <Center>
                 <Box bg="#00FF89" rounded="10" py={7} width='100%'>
-                    <Text color="black" textAlign="center" fontWeight="bold">
+                    <Text color="black" textAlign="center" fontWeight="bold" numberOfLines={1}>
                         {data.name}
                     </Text>
                     <Text textAlign="center">
@@ -40,7 +40,7 @@ export function SlideHomeMoney({ data, time }: Props) {
         <View style={styles.slide}>
             <Center>
                 <Box bg="#00FF89" rounded="10" py={7} width='100%'>
-                    <Text color="black" textAlign="center" fontWeight="bold">
+                    <Text color="black" textAlign="center" fontWeight="bold" numberOfLines={1}>
                         {data.name}
                     </Text>
                     <Text textAlign="center">
