@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     },    
 });
 
-export function Slide({ data, time }: Props) {
+export function SlideMeta({ data, time }: Props) {
     return (
         <View style={styles.slide}>
             <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>

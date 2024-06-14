@@ -2,7 +2,7 @@ import React, { useCallback, useState, useContext, useEffect } from 'react';
 import { Center, useToast, Text, View, Button } from "native-base";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
-import { Slide } from '@components/SlideMeta';
+import { SlideMeta } from '@components/SlideMeta';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { AuthContext } from '@contexts/AuthContext'; 
 import { api } from '@services/api'; 
@@ -114,7 +114,7 @@ export function Meta() {
                             activeDotColor="#00FF89"
                         >
                             {register.map((item, index) => (
-                                <Slide 
+                                <SlideMeta 
                                     key={index} 
                                     data={item}
                                     time={formatElapsedTime(item.timeInSeconds)}
