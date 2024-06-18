@@ -1,42 +1,71 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { Center, Box, VStack, Image, Heading } from "native-base";
 import { HeadingMeta } from '@components/HeadingMeta';
 import Group2x from '@assets/Group2x.png';
 import { Button } from "@components/Button";
 import { RegisterDTO } from '@dtos/RegisterDTO';
 
+const { width } = Dimensions.get('window'); // Obtém a largura da tela
+
 type Props = {
-    data: RegisterDTO
+    data: RegisterDTO,
     time: string,
-    onResetTime: () => void; 
-}
+    onResetTime: () => void;
+};
+
+
 
 const styles = StyleSheet.create({
     slide: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: 10,
-    },    
+        flex: 1,
+        paddingVertical: 40,
+        marginTop: 20,
+        marginHorizontal: 10
+
+    },
+    box: {
+        width: width - 50, 
+        height: "100%",
+        borderRadius: 20,
+        borderColor: "#00FF89",
+        borderWidth: 1,
+        backgroundColor: "#2F2841",
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    image: {
+        marginTop: 12,
+        marginBottom: 10,
+    },
+    heading: {
+        color: "#00FF89",
+        marginBottom: 3,
+    },
+  
+    value: {
+        color: "white",
+    },
+    button: {
+        marginTop: 16,
+        marginBottom: 10,
+    },
 });
 
-
-
-export function SlideMeta({ data, time, onResetTime }: Props) {
+export const SlideMeta = ({ data, time, onResetTime }: Props) => {
     return (
         <View style={styles.slide}>
-            <Box w="100%" rounded={20} borderColor="#00FF89" borderWidth={1}>
-                <VStack bg="#2F2841" rounded={20} p={4}>
-                    <Center>
-                        <HeadingMeta title={data.name}/>
-                        <Image source={Group2x} alt="imagem principal" mt={12} mb={10} />
-                        <Heading color="#00FF89" mb={3}>Tempo de abstinência</Heading>
-                        <Heading color="white">{time}</Heading>
-                        <Heading color="#00FF89" mb={3} mt={12}>Valor economizado</Heading>
-                        <Heading color="white">R$ 1.321,85</Heading>
-                        <Button title="Recaída" mt={16} mb={10} onPress={onResetTime} />
-                    </Center>
+            <Box style={styles.box}>
+                <VStack space={4} alignItems="center">
+                    <HeadingMeta title={data.name} />
+                    <Image source={Group2x} alt="Imagem principal" style={styles.image} />
+                    <Heading style={styles.heading}>Tempo de abstinência</Heading>
+                    <Heading style={styles.value}>{time}</Heading>
+                    <Heading style={[styles.heading, { marginTop: 12 }]}>Valor economizado</Heading>
+                    <Heading style={styles.value}>R$ 1.321,85</Heading>
+                    <Button title="Recaída" style={styles.button} onPress={onResetTime} />
                 </VStack>
             </Box>
         </View>

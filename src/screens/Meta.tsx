@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useContext, useEffect } from 'react';
-import { Center, useToast, Text, View, Button } from "native-base";
+import { Center, useToast, Text, View, Button, FlatList } from "native-base";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Swiper from 'react-native-swiper';
 import { SlideMeta } from '@components/SlideMeta';
@@ -10,15 +10,20 @@ import { AppError } from '@utils/AppError';
 import { RegisterDTO } from '@dtos/RegisterDTO';
 import { Loading } from '@components/Loading';
 
-
 export function Meta() {
     const { user } = useContext(AuthContext);
     const [register, setRegister] = useState<RegisterDTO[]>([]); 
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
-    
 
+    const renderItem = ({ item }: { item: RegisterDTO }) => (
+        <SlideMeta 
+            data={item}
+            time={formatElapsedTime(item.timeInSeconds)}
+            onResetTime={() => handleResetTime(item.id)} 
+        />
+    );
 
     async function fetchVicesSwiper() {
         try {
@@ -29,10 +34,10 @@ export function Meta() {
 
             const vicesWithTime = await Promise.all(
                 vices.map(async (vice: RegisterDTO) => {
-                    const timeResponse = await api.get(`/time/${vice.id}`);
+                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, {reset: false});
                     return {
                         ...vice,
-                        createAt: timeResponse.data.createAt,
+                        date: timeResponse.data.date,
                         timeInSeconds: timeResponse.data.timeInSeconds,
                     };
                 })
@@ -88,16 +93,31 @@ export function Meta() {
         return `${days}d ${hours}h ${minutes}m ${secs}s`;
     };
 
+    async function handleResetTime(viceId: string) {
+        try {
+            const response = await api.patch(`/time/vice/${viceId}`, { reset: true });
+            const { date, timeInSeconds } = response.data;
 
-    async function handleResetTime() {
-        console.log("Resetou")
-        toast.show({
-            title: `Resetou`,
-            placement: 'top',
-            bgColor: 'red.500'
-        });
+            setRegister((prevRegister) =>
+                prevRegister.map((vice) =>
+                    vice.id === viceId ? { ...vice, date, timeInSeconds } : vice
+                )
+            );
 
-        
+            toast.show({
+                title: `Que pena, dessa vez você consegue! 😢`,
+                placement: 'top',
+                bgColor: 'gray.400'
+            });
+        } catch (error: any) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível resetar o tempo';
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        }
     }
 
     return (
@@ -119,20 +139,14 @@ export function Meta() {
                             </Button>
                         </Center>
                     ) : (
-                        <Swiper
-                            paginationStyle={{ bottom: 740 }}
-                            dotColor="gray"
-                            activeDotColor="#00FF89"
-                        >
-                            {register.map((item, index) => (
-                                <SlideMeta 
-                                    key={index} 
-                                    data={item}
-                                    time={formatElapsedTime(item.timeInSeconds)}
-                                    onResetTime={handleResetTime}
-                                />
-                            ))}
-                        </Swiper>
+                        <FlatList
+                        data={register}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item.id}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                    />
                     )
                 )}
             </Center>
