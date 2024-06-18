@@ -35,7 +35,7 @@ export function Home() {
 
             const vicesWithTime = await Promise.all(
                 vices.map(async (vice: RegisterDTO) => {
-                    const timeResponse = await api.get(`/time/${vice.id}`);
+                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, {reset: false});
                     return {
                         ...vice,
                         createAt: timeResponse.data.createAt,
