@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useContext, useEffect } from 'react';
 import { Center, useToast, Text, View, Button, FlatList } from "native-base";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import Swiper from 'react-native-swiper';
 import { SlideMeta } from '@components/SlideMeta';
 import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { AuthContext } from '@contexts/AuthContext'; 
@@ -105,7 +104,7 @@ export function Meta() {
             );
 
             toast.show({
-                title: `Que pena, dessa vez você consegue! 😢`,
+                title: `Que pena, dessa vez você consegue!😢`,
                 placement: 'top',
                 bgColor: 'gray.400'
             });
