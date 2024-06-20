@@ -133,7 +133,7 @@ export function Home() {
                                             </Heading>
                                             <Text ml={4} mt={2}>
                                                 {vices.map((vice, index) => (
-                                                    <Text key={index}>- {vice.name}{'\n'}</Text>
+                                                    <Text fontWeight="bold" key={index}>- {vice.name}{'\n'}</Text>
                                                 ))}
                                             </Text>
                                         </>
