@@ -108,7 +108,7 @@ export function Meta() {
                 placement: 'top',
                 bgColor: 'gray.400'
             });
-        } catch (error: any) {
+        } catch (error) {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : 'Não foi possível resetar o tempo';
             toast.show({

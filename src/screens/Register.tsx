@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast, VStack } from 'native-base';
+import { Box, Center, Heading, Modal, Input, Button, Text, ScrollView, useToast, VStack, HStack, Switch } from 'native-base';
 import { TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { RegisterCard } from '../components/RegisterCard';
@@ -9,14 +9,20 @@ import { api } from '@services/api';
 import { AppError } from '@utils/AppError';
 import { RegisterDTO } from '@dtos/RegisterDTO';
 import { useAuth } from '@hooks/useAuth';
+import { ModalEconomy } from '@components/ModalEconomy';  
 
 export function Register() {
     const [isLoading, setIsLoading] = useState(true);
-    const [vice, setVice] = useState<RegisterDTO[]>([]);
 
+    const [vice, setVice] = useState<RegisterDTO[]>([]);
     const [registerName, setRegisterName] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+
+    const [secondModalVisible, setSecondModalVisible] = useState(false);
+    const [optionSelect, setOptionSlect] = useState(false);
+
     const navigation = useNavigation<AppNavigatorRoutesProps>();
+
     const toast = useToast();
     const { user } = useAuth();
 
@@ -43,18 +49,27 @@ export function Register() {
             });
 
             setModalVisible(false);
+            if(!optionSelect){
+                navigation.navigate("meta")
+            }
+
+            if (optionSelect) {
+                setSecondModalVisible(true);
+            }
+
             fetchVices();
-        } catch (error: any) {
+        } catch (error) {
             const isAppError = error instanceof AppError;
             const title = isAppError ? error.message : 'Não foi possível registrar o vício.';
             toast.show({
                 title,
                 placement: 'top',
                 bgColor: 'red.500'
-            })
-            
+            });
+
         } finally {
             setRegisterName('');
+            setOptionSlect(false); 
         }
     }
 
@@ -67,7 +82,7 @@ export function Register() {
             setVice(response.data);
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
-                console.log('não possuí registros')
+                console.log('não possui registros');
             } else {
                 const isAppError = error instanceof AppError;
                 const title = isAppError ? error.message : 'Não foi possível carregar os seus registros';
@@ -107,10 +122,9 @@ export function Register() {
                             )}
                         </VStack>
                     )}
-
                 </Box>
                 <Modal isOpen={modalVisible} onClose={() => setModalVisible(false)}>
-                    <Modal.Content maxWidth="400px">
+                    <Modal.Content mb={150}>
                         <Modal.CloseButton />
                         <Modal.Header>Adicione Para Monitorar</Modal.Header>
                         <Modal.Body>
@@ -118,7 +132,8 @@ export function Register() {
                                 <Input
                                     h={10}
                                     rounded={10}
-                                    placeholder={"Digite o nome"}
+                                    placeholder="Digite o nome"
+                                    focusOutlineColor="#00FF89"
                                     onChangeText={text => setRegisterName(text)}
                                     value={registerName}
                                 />
@@ -130,12 +145,29 @@ export function Register() {
                                     _pressed={{ bg: 'green.600' }}
                                     onPress={handleCreateVice}
                                 >
-                                    <Text fontSize={16} fontWeight={"bold"}>Criar</Text>
+                                    <Text fontSize={16} fontWeight="bold">Criar</Text>
                                 </Button>
+
+                                <Text mt={5} fontSize={16}>Deseja monitorar os gastos?</Text>
+                                <HStack>
+                                    <Text mt={4}>Não</Text>
+                                    <Switch
+                                        colorScheme="emerald"
+                                        size="lg"
+                                        isChecked={optionSelect}
+                                        onToggle={() => setOptionSlect(!optionSelect)}
+                                    />
+                                    <Text mt={4}>Sim</Text>
+                                </HStack>
                             </Center>
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
+
+                <ModalEconomy
+                    isOpen={secondModalVisible}
+                    onClose={() => setSecondModalVisible(false)}
+                />
             </Center>
         </ScrollView>
     );

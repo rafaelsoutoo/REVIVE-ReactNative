@@ -11,7 +11,7 @@ type Props = {
 const styles = StyleSheet.create({
     slide: {
         marginHorizontal: 10,
-        width: 130, // Defina a largura dos slides para se ajustarem à tela
+        width: 130, 
     },
 });
 
