@@ -1,20 +1,19 @@
 import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import { Center, Box, VStack, Image, Heading } from "native-base";
+import { Box, VStack, Image, Heading } from "native-base";
 import { HeadingMeta } from '@components/HeadingMeta';
 import Group2x from '@assets/Group2x.png';
 import { Button } from "@components/Button";
 import { RegisterDTO } from '@dtos/RegisterDTO';
 
-const { width } = Dimensions.get('window'); // Obtém a largura da tela
+const { width } = Dimensions.get('window'); 
 
 type Props = {
     data: RegisterDTO,
+    amount: string,
     time: string,
     onResetTime: () => void;
 };
-
-
 
 const styles = StyleSheet.create({
     slide: {
@@ -24,7 +23,6 @@ const styles = StyleSheet.create({
         paddingVertical: 40,
         marginTop: 20,
         marginHorizontal: 10
-
     },
     box: {
         width: width - 50, 
@@ -44,7 +42,6 @@ const styles = StyleSheet.create({
         color: "#00FF89",
         marginBottom: 3,
     },
-  
     value: {
         color: "white",
     },
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export const SlideMeta = ({ data, time, onResetTime }: Props) => {
+export const SlideMeta = ({ data, time, amount, onResetTime }: Props) => {
     return (
         <View style={styles.slide}>
             <Box style={styles.box}>
@@ -64,7 +61,7 @@ export const SlideMeta = ({ data, time, onResetTime }: Props) => {
                     <Heading style={styles.heading}>Tempo de abstinência</Heading>
                     <Heading style={styles.value}>{time}</Heading>
                     <Heading style={[styles.heading, { marginTop: 12 }]}>Valor economizado</Heading>
-                    <Heading style={styles.value}>R$ 1.321,85</Heading>
+                    <Heading style={styles.value}>{amount}</Heading>
                     <Button title="Recaída" style={styles.button} onPress={onResetTime} />
                 </VStack>
             </Box>
