@@ -19,6 +19,7 @@ export function Meta() {
     const renderItem = ({ item }: { item: RegisterDTO }) => (
         <SlideMeta 
             data={item}
+            amount={formatElapsedAmount(item.economies[0]?.amount)}
             time={formatElapsedTime(item.timeInSeconds)}
             onResetTime={() => handleResetTime(item.id)} 
         />
@@ -28,16 +29,30 @@ export function Meta() {
         try {
             setIsLoading(true);
             const userId = user.id;
+
             const response = await api.get(`/get/vice/${userId}`);
             const vices = response.data;
 
             const vicesWithTime = await Promise.all(
                 vices.map(async (vice: RegisterDTO) => {
-                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, {reset: false});
+                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, { reset: false });
+
+                    const economyPromises = vice.economies.map(async (economy: any) => {
+                        const amountResponse = await api.patch(`/amount/${economy.economyId}`, { amount: economy.amount }); 
+
+                        return {
+                            economyId: economy.economyId,
+                            amount: amountResponse.data.amount,
+                        };
+                    });
+
+                    const economies = await Promise.all(economyPromises);
+
                     return {
                         ...vice,
                         date: timeResponse.data.date,
                         timeInSeconds: timeResponse.data.timeInSeconds,
+                        economies,
                     };
                 })
             );
@@ -45,7 +60,7 @@ export function Meta() {
             setRegister(vicesWithTime);
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
-                console.log('não possuí registros');
+                console.log('Não possui registros', error.response.data);
             } else {
                 const isAppError = error instanceof AppError;
                 const title = isAppError ? error.message : 'Não foi possível carregar os seus registros';
@@ -59,6 +74,10 @@ export function Meta() {
             setIsLoading(false);
         }
     }
+
+    useEffect(() => {
+        fetchVicesSwiper();
+    }, []);
 
     useFocusEffect(
         useCallback(() => {
@@ -92,6 +111,14 @@ export function Meta() {
         return `${days}d ${hours}h ${minutes}m ${secs}s`;
     };
 
+    const formatElapsedAmount = (amount: number | undefined) => {
+        if (amount === undefined || amount === null) {
+            return null; // Retorna null quando amount não está definido
+        }
+        return `R$ ${(amount).toFixed(2).replace('.', ',')}`; 
+    };
+    
+
     async function handleResetTime(viceId: string) {
         try {
             const response = await api.patch(`/time/vice/${viceId}`, { reset: true });
@@ -123,7 +150,7 @@ export function Meta() {
         <View flex={1} backgroundColor="#201B2C">
             <Center flex={1} px={4}>
                 {isLoading ? (
-                    <Loading/>
+                    <Loading />
                 ) : (
                     register.length === 0 ? (
                         <Center flex={1}>
@@ -131,7 +158,7 @@ export function Meta() {
                                 Não há registros ainda. {'\n'}
                                 Adicione registros na tela de cadastro.
                             </Text>
-                            <Button rounded={14} mt={4} background="#00FF89" _pressed={{background:'green.600'}} onPress={() => navigation.navigate('register')}>
+                            <Button rounded={14} mt={4} background="#00FF89" _pressed={{ background: 'green.600' }} onPress={() => navigation.navigate('register')}>
                                 <Text fontWeight='bold'>
                                     Adicionar
                                 </Text>
@@ -139,13 +166,13 @@ export function Meta() {
                         </Center>
                     ) : (
                         <FlatList
-                        data={register}
-                        renderItem={renderItem}
-                        keyExtractor={(item) => item.id}
-                        horizontal
-                        pagingEnabled
-                        showsHorizontalScrollIndicator={false}
-                    />
+                            data={register}
+                            renderItem={renderItem}
+                            keyExtractor={(item) => item.id}
+                            horizontal
+                            pagingEnabled
+                            showsHorizontalScrollIndicator={false}
+                        />
                     )
                 )}
             </Center>

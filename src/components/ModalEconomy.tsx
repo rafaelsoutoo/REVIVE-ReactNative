@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Center, Modal, Text, Button, Input } from "native-base";
+import { Center, Modal, Text, Button, Input, useToast } from "native-base";
 import { useAuth } from '@hooks/useAuth';
-import { number } from 'yup';
+import { api } from '@services/api';
+import { AppError } from '@utils/AppError';
+import { AppNavigatorRoutesProps } from '@routes/app.routes';
+import { useNavigation } from '@react-navigation/native';
 
 type ModalEconomyProps = {
     isOpen: boolean;
@@ -10,16 +13,62 @@ type ModalEconomyProps = {
 
 export function ModalEconomy({ isOpen, onClose }: ModalEconomyProps) {
     const { user } = useAuth();
-
+    const toast = useToast();
+    const navigation = useNavigation<AppNavigatorRoutesProps>();
 
     const [unitPrice, setUnitPrice] = useState('');
+    const [amountPrice, setAmountPrice] = useState('');
 
     const formatUnitPrice = (value: string) => {
         const numericValue = value.replace(/[^0-9]/g, '');
-        const formattedValue = `R$ ${numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+        const formattedValue = `R$ ${numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
         return formattedValue;
     };
-    
+
+    const parseAmountPrice = (value: string) => {
+        const numericValue = value.replace(/[^0-9]/g, '');
+        return parseInt(numericValue, 10);
+    };
+
+    async function handleCreateEconomy() {
+        try {
+            const unit = parseInt(unitPrice, 10);
+            const originalAmount = parseAmountPrice(amountPrice);
+
+            if (isNaN(unit) || isNaN(originalAmount) || originalAmount <= 0) {
+                toast.show({
+                    title: 'Por favor, insira valores válidos.',
+                    placement: 'top',
+                    bgColor: 'red.500'
+                });
+                return;
+            }
+
+            await api.post('/create/economy', {
+                unit,
+                originalAmount
+            });
+
+
+            toast.show({
+                title: 'Economia registrada com sucesso!',
+                placement: 'top',
+                bgColor: 'green.500'
+            });
+
+            navigation.navigate('meta')
+
+            onClose();
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível registrar a economia.';
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        }
+    }
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -37,8 +86,10 @@ export function ModalEconomy({ isOpen, onClose }: ModalEconomyProps) {
                             h={10}
                             w={"90%"}
                             rounded={10}
-                            placeholder="Digite a qunatidade"
+                            placeholder="Digite a quantidade"
                             focusOutlineColor="#00FF89"
+                            value={unitPrice}
+                            onChangeText={(text) => setUnitPrice(text)}
                         />
                         <Text mt={5}>
                             Qual valor de cada unidade?
@@ -49,10 +100,10 @@ export function ModalEconomy({ isOpen, onClose }: ModalEconomyProps) {
                             h={10}
                             w={"90%"}
                             rounded={10}
-                            placeholder="Digite a qunatidade"
+                            placeholder="Digite o valor"
                             focusOutlineColor="#00FF89"
-                            value={unitPrice}
-                            onChangeText={(text) => setUnitPrice(formatUnitPrice(text))}
+                            value={amountPrice}
+                            onChangeText={(text) => setAmountPrice(formatUnitPrice(text))}
                         />
                         <Button
                             mt={5}
@@ -60,7 +111,7 @@ export function ModalEconomy({ isOpen, onClose }: ModalEconomyProps) {
                             bg="#00FF89"
                             px={10}
                             _pressed={{ bg: 'green.600' }}
-                            onPress={onClose}
+                            onPress={handleCreateEconomy}
                         >
                             <Text fontSize={16} fontWeight="bold">Confirmar</Text>
                         </Button>
