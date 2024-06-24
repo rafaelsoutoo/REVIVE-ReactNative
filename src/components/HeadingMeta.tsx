@@ -5,11 +5,11 @@ type Props = IImageProps & {
     title: string;
 }
 
-export function HeadingMeta({ title, ...rest }: Props) {
+export function HeadingMeta({ title }: Props) {
     return (
         <Center justifyContent="center" alignItems="center">
             <HStack>
-                <Titulo color="#00FF89" mt={5}>
+                <Titulo color="#00FF89" fontSize={26} mt={5} mx={5} numberOfLines={2}>
                     {title}
                 </Titulo>
               

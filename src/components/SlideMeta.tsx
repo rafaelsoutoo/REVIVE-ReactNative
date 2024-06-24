@@ -60,7 +60,7 @@ export const SlideMeta = ({ data, time, amount, onResetTime }: Props) => {
                     <Image source={Group2x} alt="Imagem principal" style={styles.image} />
                     <Heading style={styles.heading}>Tempo de abstinência</Heading>
                     <Heading style={styles.value}>{time}</Heading>
-                    {amount && ( // Verifica se amount está definido
+                    {amount && ( 
                         <>
                             <Heading style={[styles.heading, { marginTop: 12 }]}>Valor economizado</Heading>
                             <Heading style={styles.value}>{amount}</Heading>
