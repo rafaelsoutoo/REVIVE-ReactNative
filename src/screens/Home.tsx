@@ -30,16 +30,29 @@ export function Home() {
         try {
             setIsLoading(true);
             const userId = user.id;
+
             const response = await api.get(`/get/vice/${userId}`);
             const vices = response.data;
 
             const vicesWithTime = await Promise.all(
                 vices.map(async (vice: RegisterDTO) => {
-                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, {reset: false});
+                    const timeResponse = await api.patch(`/time/vice/${vice.id}`, { reset: false });
+                    const economyPromises = vice.economies.map(async (economy: any) => {
+                        const amountResponse = await api.patch(`/amount/${economy.economyId}`, { amount: economy.amount });
+
+                        return {
+                            economyId: economy.economyId,
+                            amount: amountResponse.data.amount, 
+                        };
+                    });
+
+                    const economies = await Promise.all(economyPromises);
+
                     return {
                         ...vice,
-                        createAt: timeResponse.data.createAt,
+                        date: timeResponse.data.date,
                         timeInSeconds: timeResponse.data.timeInSeconds,
+                        economies,
                     };
                 })
             );
@@ -47,7 +60,7 @@ export function Home() {
             setVice(vicesWithTime);
         } catch (error: any) {
             if (error.response && error.response.status === 404) {
-                console.log('não possuí registros');
+                console.log('Não possui registros', error.response.data);
             } else {
                 const isAppError = error instanceof AppError;
                 const title = isAppError ? error.message : 'Não foi possível carregar os seus registros';
@@ -61,6 +74,7 @@ export function Home() {
             setIsLoading(false);
         }
     }
+
 
     useFocusEffect(
         useCallback(() => {
@@ -113,14 +127,14 @@ export function Home() {
                         />
                         {isLoading ? (
                             <View mt={10}>
-                                <Loading/>
+                                <Loading />
                             </View>
-                            
+
                         ) : (
                             <>
                                 {vices.length === 0 ? (
                                     <Box alignItems="center">
-                                            <Text mt={5} fontWeight='bold' color="white">Ainda Não Possui nada Registrado!</Text>
+                                        <Text mt={5} fontWeight='bold' color="white">Ainda Não Possui nada Registrado!</Text>
                                         <Button rounded={14} mt={5} background="#2F2841" borderWidth={1} borderColor="#00FF89" _pressed={{ background: 'gray.800' }} onPress={() => navigation.navigate('register')}>
                                             <Text fontWeight='bold' color="#00FF89">Vamos lá?</Text>
                                         </Button>
@@ -162,12 +176,13 @@ export function Home() {
                                 renderItem={({ item }) => (
                                     <SlideHomeMoney
                                         data={item}
-                                        time={formatElapsedTime(item.timeInSeconds)}
+                                        amount={item.economies.map((economy: any) => economy.amount)}
                                     />
                                 )}
                                 pagingEnabled
                                 showsHorizontalScrollIndicator={false}
                             />
+
                         </HStack>
                     </VStack>
                 </Box>
