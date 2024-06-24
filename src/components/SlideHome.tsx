@@ -40,11 +40,14 @@ export function SlideHomeTime({ data, time }: timeProps) {
 }
 
 export function SlideHomeMoney({ data, amount }: amountProps) {
-
+    if (!amount || amount.length === 0) {
+        return null; 
+    }
     const formattedAmount = amount.map((value) => value.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL',
     }));
+
     return (
         <View style={styles.slide}>
             <Center>

@@ -112,11 +112,12 @@ export function Meta() {
     };
 
     const formatElapsedAmount = (amount: number | undefined) => {
-        if (amount === undefined) {
-            return 'R$ 0,00'; 
+        if (amount === undefined || amount === null) {
+            return null; // Retorna null quando amount não está definido
         }
         return `R$ ${(amount).toFixed(2).replace('.', ',')}`; 
     };
+    
 
     async function handleResetTime(viceId: string) {
         try {
